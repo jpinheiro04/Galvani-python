@@ -1,0 +1,85 @@
+import sqlite3
+
+# FunÃ§Ã£o para criar a tabela
+def criar_tabela():
+    conexao = sqlite3.connect('exemplo.db')
+    cursor = conexao.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios (
+                        id INTEGER PRIMARY KEY,
+                        nome TEXT NOT NULL,
+                        idade INTEGER)''')
+    conexao.commit()
+    conexao.close()
+
+# FunÃ§Ã£o para adicionar um novo usuÃ¡rio
+def adicionar_usuario(nome, idade):
+    conexao = sqlite3.connect('exemplo.db')
+    cursor = conexao.cursor()
+    cursor.execute('''INSERT INTO usuarios (nome, idade) VALUES (?, ?)''', (nome, idade))
+    conexao.commit()
+    conexao.close()
+
+# FunÃ§Ã£o para listar todos os usuÃ¡rios
+def listar_usuarios():
+    conexao = sqlite3.connect('exemplo.db')
+    cursor = conexao.cursor()
+    cursor.execute('''SELECT * FROM usuarios''')
+    usuarios = cursor.fetchall()
+    for usuario in usuarios:
+        print(usuario)
+    conexao.close()
+
+# FunÃ§Ã£o para atualizar os dados de um usuÃ¡rio
+def atualizar_usuario(id, nome, idade):
+    conexao = sqlite3.connect('exemplo.db')
+    cursor = conexao.cursor()
+    cursor.execute('''UPDATE usuarios SET nome = ?, idade = ? WHERE id = ?''', (nome, idade, id))
+    conexao.commit()
+    conexao.close()
+
+# FunÃ§Ã£o para deletar um usuÃ¡rio
+def deletar_usuario(id):
+    conexao = sqlite3.connect('exemplo.db')
+    cursor = conexao.cursor()
+    cursor.execute('''DELETE FROM usuarios WHERE id = ?''', (id,))
+    conexao.commit()
+    conexao.close()
+
+# FunÃ§Ã£o do menu de escolhas
+def menu():
+    print("\n1. Adicionar usuÃ¡rio")
+    print("2. Listar usuÃ¡rios")
+    print("3. Atualizar usuÃ¡rio")
+    print("4. Deletar usuÃ¡rio")
+    print("5. Sair")
+
+# Criar a tabela (se ainda nÃ£o existir)
+criar_tabela()
+
+while True:
+    menu()
+    escolha = input("Escolha uma opÃ§Ã£o: ")
+
+    if escolha == '1':
+        nome = input("Digite o nome do usuÃ¡rio: ")
+        idade = int(input("Digite a idade do usuÃ¡rio: "))
+        adicionar_usuario(nome, idade)
+        print("UsuÃ¡rio adicionado com sucesso!")
+    elif escolha == '2':
+        print("\nTodos os usuÃ¡rios:")
+        listar_usuarios()
+    elif escolha == '3':
+        id = int(input("Digite o ID do usuÃ¡rio a ser atualizado: "))
+        nome = input("Digite o novo nome do usuÃ¡rio: ")
+        idade = int(input("Digite a nova idade do usuÃ¡rio: "))
+        atualizar_usuario(id, nome, idade)
+        print("UsuÃ¡rio atualizado com sucesso!")
+    elif escolha == '4':
+        id = int(input("Digite o ID do usuÃ¡rio a ser deletado: "))
+        deletar_usuario(id)
+        print("UsuÃ¡rio deletado com sucesso!")
+    elif escolha == '5':
+        print("Saindo do programa...")
+        break
+    else:
+        print("OpÃ§Ã£o invÃ¡lida. Por favor, escolha uma opÃ§Ã£o vÃ¡lida.")
