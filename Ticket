@@ -1,0 +1,78 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Preço base do ingresso
+PRECO_INGRESSO = 50.0
+
+def calcular():
+    try:
+        qtd = int(entrada_qtd.get())
+        if qtd <= 0:
+            messagebox.showerror("Erro", "Digite uma quantidade válida de ingressos.")
+            return
+
+        tipo = var_tipo.get()
+
+        if tipo == "inteira":
+            valor_unit = PRECO_INGRESSO
+            tipo_txt = "Inteira"
+        elif tipo == "meia":
+            valor_unit = PRECO_INGRESSO * 0.5
+            tipo_txt = "Meia"
+        elif tipo == "idoso":
+            valor_unit = PRECO_INGRESSO * 0.4
+            tipo_txt = "Idoso"
+        elif tipo == "crianca":
+            valor_unit = 0.0
+            tipo_txt = "Criança (menos de 10 anos)"
+        else:
+            messagebox.showerror("Erro", "Selecione um tipo de ingresso.")
+            return
+
+        total = qtd * valor_unit
+        label_resultado.config(
+            text=f"Tipo: {tipo_txt}\nQuantidade: {qtd}\nPreço unitário: R$ {valor_unit:.2f}\nTotal a pagar: R$ {total:.2f}"
+        )
+
+    except ValueError:
+        messagebox.showerror("Erro de Entrada", "Por favor, insira um número válido para a quantidade.")
+
+# Janela principal
+janela = tk.Tk()
+janela.title("Sistema de Ingressos")
+janela.geometry("400x350")
+janela.resizable(False, False)
+
+# Campo quantidade
+label_qtd = tk.Label(janela, text="Quantidade de Ingressos:")
+label_qtd.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+entrada_qtd = tk.Entry(janela)
+entrada_qtd.grid(row=0, column=1, padx=10, pady=10)
+
+# Tipos de ingresso
+label_tipo = tk.Label(janela, text="Selecione o Tipo de Ingresso:")
+label_tipo.grid(row=1, column=0, columnspan=2, pady=5)
+
+var_tipo = tk.StringVar(value="inteira")
+
+radio_inteira = tk.Radiobutton(janela, text="Inteira (100%)", variable=var_tipo, value="inteira")
+radio_inteira.grid(row=2, column=0, sticky="w", padx=20)
+
+radio_meia = tk.Radiobutton(janela, text="Meia (50%)", variable=var_tipo, value="meia")
+radio_meia.grid(row=2, column=1, sticky="w", padx=20)
+
+radio_idoso = tk.Radiobutton(janela, text="Idoso (60% desconto)", variable=var_tipo, value="idoso")
+radio_idoso.grid(row=3, column=0, sticky="w", padx=20)
+
+radio_crianca = tk.Radiobutton(janela, text="Criança < 10 anos (Grátis)", variable=var_tipo, value="crianca")
+radio_crianca.grid(row=3, column=1, sticky="w", padx=20)
+
+# Botão calcular
+botao_calcular = tk.Button(janela, text="Calcular", command=calcular)
+botao_calcular.grid(row=4, column=0, columnspan=2, pady=20)
+
+# Resultado
+label_resultado = tk.Label(janela, text="Resultado: ", font=("Helvetica", 12, "bold"), justify="left")
+label_resultado.grid(row=5, column=0, columnspan=2)
+
+janela.mainloop()
